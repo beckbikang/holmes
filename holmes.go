@@ -115,7 +115,7 @@ func newLogSegment(unit time.Duration, logPath string) *logSegment {
 		}
 		next := now.Truncate(unit).Add(unit)
 		var timeToCreate <-chan time.Time
-		if unit == time.Hour || unit == time.Minute {
+		if unit == time.Hour || unit == time.Minute || unit == time.Day{
 			timeToCreate = time.After(next.Sub(time.Now()))
 		}
 		return &logSegment{
@@ -265,6 +265,11 @@ func LogFilePath(p string) func(Logger) Logger {
 		l.logPath = p
 		return l
 	}
+}
+
+func EveryDay(l Logger) Logger{
+	l.unit = time.Day
+	return l
 }
 
 // EveryHour sets new log file created every hour.
